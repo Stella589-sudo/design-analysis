@@ -1,0 +1,40 @@
+class UnionFind:
+    def __init__(self, nodes):
+        self.parent = {node: node for node in nodes}
+
+    def find(self, node):
+        if self.parent[node] != node:
+            self.parent[node] = self.find(self.parent[node])
+        return self.parent[node]
+
+    def union(self, node1, node2):
+        root1 = self.find(node1)
+        root2 = self.find(node2)
+        if root1 == root2:
+            return False
+        self.parent[root2] = root1
+        return True
+
+def kruskal(edges, nodes):
+    mst = []
+    uf = UnionFind(nodes)
+    edges.sort(key=lambda x: x[2])  # Sort by cost
+
+    for u, v, cost in edges:
+        if uf.union(u, v):
+            mst.append((u, v, cost))
+    return mst
+
+# Example usage
+if __name__ == "__main__":
+    nodes = ['A', 'B', 'C', 'D']
+    edges = [
+        ('A', 'B', 1),
+        ('A', 'C', 3),
+        ('B', 'C', 1),
+        ('B', 'D', 4),
+        ('C', 'D', 1)
+    ]
+
+    mst = kruskal(edges, nodes)
+    print("Kruskal's MST:", mst)
