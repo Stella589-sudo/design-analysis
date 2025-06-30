@@ -1,0 +1,30 @@
+import heapq
+from collections import defaultdict
+
+def prim(graph, start):
+    mst = []
+    visited = set([start])
+    edges = [(cost, start, to) for to, cost in graph[start]]
+    heapq.heapify(edges)
+
+    while edges:
+        cost, frm, to = heapq.heappop(edges)
+        if to not in visited:
+            visited.add(to)
+            mst.append((frm, to, cost))
+            for next_to, next_cost in graph[to]:
+                if next_to not in visited:
+                    heapq.heappush(edges, (next_cost, to, next_to))
+    return mst
+
+# Example usage
+if __name__ == "__main__":
+    # Graph as adjacency list
+    graph = defaultdict(list)
+    graph['A'] = [('B', 1), ('C', 3)]
+    graph['B'] = [('A', 1), ('C', 1), ('D', 4)]
+    graph['C'] = [('A', 3), ('B', 1), ('D', 1)]
+    graph['D'] = [('B', 4), ('C', 1)]
+
+    mst = prim(graph, 'A')
+    print("Prim's MST:", mst)
